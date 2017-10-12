@@ -3,30 +3,65 @@ R Markdown Test
 Nils
 12 oktober 2017
 
-R Markdown
-----------
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Check out this glorious code:
 
 ``` r
-summary(cars)
+data = read.delim(file = 'purchases.txt', header = FALSE, sep = '\t', dec = '.')
+
+colnames(data) = c('customer_id', 'purchase_amount', 'date_of_purchase')
+data$date_of_purchase = as.Date(data$date_of_purchase, "%Y-%m-%d")
+data$days_since       = as.numeric(difftime(time1 = "2016-01-01",
+                                            time2 = data$date_of_purchase,
+                                            units = "days"))
+
+# Compute key marketing indicators using SQL language
+library(sqldf)
 ```
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
+    ## Warning: package 'sqldf' was built under R version 3.3.3
 
-Including Plots
----------------
+    ## Loading required package: gsubfn
 
-You can also embed plots, for example:
+    ## Warning: package 'gsubfn' was built under R version 3.3.3
 
-![](RMarkdownTest_files/figure-markdown_github-ascii_identifiers/pressure-1.png)
+    ## Loading required package: proto
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+    ## Warning: package 'proto' was built under R version 3.3.3
+
+    ## Loading required package: RSQLite
+
+    ## Warning: package 'RSQLite' was built under R version 3.3.3
+
+``` r
+# Compute recency, frequency, and average purchase amount
+customers = sqldf("SELECT customer_id,
+                          MIN(days_since) AS 'recency',
+                          COUNT(*) AS 'frequency',
+                          AVG(purchase_amount) AS 'amount'
+                   FROM data GROUP BY 1")
+
+# Explore the data
+#head(customers)
+#summary(customers)
+hist(customers$recency)
+```
+
+![](RMarkdownTest_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-1.png)
+
+``` r
+hist(customers$frequency)
+```
+
+![](RMarkdownTest_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-2.png)
+
+``` r
+hist(customers$amount)
+```
+
+![](RMarkdownTest_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-3.png)
+
+``` r
+hist(customers$amount, breaks = 100)
+```
+
+![](RMarkdownTest_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-1-4.png)

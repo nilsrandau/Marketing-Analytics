@@ -21,7 +21,22 @@ data$days_since       = as.numeric(difftime(time1 = "2016-01-01",
                                             time2 = data$date_of_purchase,
                                             units = "days"))
 
-head(data)
-summary(data)
+# Compute key marketing indicators using SQL language
+library(sqldf)
+
+# Compute recency, frequency, and average purchase amount
+customers = sqldf("SELECT customer_id,
+                          MIN(days_since) AS 'recency',
+                          COUNT(*) AS 'frequency',
+                          AVG(purchase_amount) AS 'amount'
+                   FROM data GROUP BY 1")
+
+# Explore the data
+#head(customers)
+#summary(customers)
+hist(customers$recency)
+hist(customers$frequency)
+hist(customers$amount)
+hist(customers$amount, breaks = 100)
 ```
 
