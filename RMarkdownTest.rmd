@@ -1,6 +1,6 @@
 ---
 title: "R Markdown Test"
-author: "Default"
+author: "Nils"
 date: "12 oktober 2017"
 output: html_document
 ---
