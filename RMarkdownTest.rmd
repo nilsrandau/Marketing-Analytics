@@ -7,25 +7,21 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+Check out this glorious code:
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+data = read.delim(file = 'purchases.txt', header = FALSE, sep = '\t', dec = '.')
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+colnames(data) = c('customer_id', 'purchase_amount', 'date_of_purchase')
+data$date_of_purchase = as.Date(data$date_of_purchase, "%Y-%m-%d")
+data$days_since       = as.numeric(difftime(time1 = "2016-01-01",
+                                            time2 = data$date_of_purchase,
+                                            units = "days"))
 
-```{r cars}
-summary(cars)
+head(data)
+summary(data)
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
