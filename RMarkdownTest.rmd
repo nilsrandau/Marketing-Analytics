@@ -2,8 +2,9 @@
 title: "R Markdown Test"
 author: "Nils"
 date: "12 oktober 2017"
-output: 
-  html_document: github_document
+output:
+  html_document:
+    keep_md: TRUE
 ---
 
 ```{r setup, include=FALSE}
